@@ -1,6 +1,6 @@
 import cv2
 
-image = cv2.imread("data/samples/face_1.jpg")
+image = cv2.imread("data/samples/curacao.png")
 
 if image is None:
     print("Image not found")
@@ -38,7 +38,7 @@ for (x, y, w, h) in faces:
     )
 
 #saving image to results folder
-cv2.imwrite("results/result.jpg", image)
+cv2.imwrite("results/curacao_result.jpg", image)
 print("Image saved!")
 
 cv2.imshow("Face Detection (Color)", image)
