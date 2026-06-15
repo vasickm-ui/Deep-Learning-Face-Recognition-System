@@ -24,7 +24,3 @@ A computer cannot understand a human face in the way humans do, it requires a nu
 
 ## 
 
-
-
-
-
