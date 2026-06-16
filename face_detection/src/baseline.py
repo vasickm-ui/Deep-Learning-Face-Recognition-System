@@ -45,8 +45,8 @@ def cos_similarity(a, b):
 
     return np.dot(a,b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
-test_img = cv2.imread("test/big3_test1.jpg")
-test_faces = get_faces("test/big3_test1.jpg")
+test_img = cv2.imread("test/federe_murr_test.jpg")
+test_faces = get_faces("test/federe_murr_test.jpg")
 
 if test_img is None or len(test_faces) == 0:
     print("Problem with test image!")
@@ -82,7 +82,7 @@ for emb, bbox in test_faces:
     )
 
     print("----------------------------------------------------------")
-
+cv2.imwrite("results/fed_mur.jpg", test_img)
 cv2.namedWindow("Result", cv2.WINDOW_NORMAL)
 cv2.imshow("Result", test_img)
 cv2.waitKey(0)
