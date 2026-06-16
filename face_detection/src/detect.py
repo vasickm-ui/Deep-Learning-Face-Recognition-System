@@ -21,8 +21,7 @@ face_cascade = cv2.CascadeClassifier(
 faces = face_cascade.detectMultiScale(
     gray,
     scaleFactor=1.1,
-    minNeighbors=5,
-    minSize=(30, 30)
+    minNeighbors=7,
 )
 
 print("Number of faces detected: ", len(faces))
