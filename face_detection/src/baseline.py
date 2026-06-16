@@ -52,9 +52,9 @@ for name, path in images.items():
     if emb is not None:
         embeddings[name] = emb
 
-test_img = cv2.imread("test/federer_test.jpg")
-test_embedding = get_embedding("test/federer_test.jpg")
-test_bbox = get_bbox("test/federer_test.jpg")
+test_img = cv2.imread("test/djokovic_badq_test.jpg")
+test_embedding = get_embedding("test/djokovic_badq_test.jpg")
+test_bbox = get_bbox("test/djokovic_badq_test.jpg")
 if test_embedding is None or test_bbox is None:
     print("Problem with test image!")
 
@@ -84,7 +84,7 @@ cv2.putText(
     color,
     2
 )
-
+cv2.namedWindow("Result", cv2.WINDOW_NORMAL)
 cv2.imshow("Result", test_img)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
