@@ -17,36 +17,36 @@ def cosine_similarity(a, b):
     b = b / np.linalg.norm(b)
     return np.dot(a, b)
 
-def evaluate(database, test_path, unknown_path, threshold=0.6):
-    correct = 0
-    total = 0
-    false_reject = 0
-    false_accept = 0
+#this method calculates avg emedings per person and stores it in dict
+def calculate_avg_embeddings(enroll_path):
+    emb_data = {}
+    for person in os.listdir(enroll_path):
+        person_name_folder = os.path.join(enroll_path, person)
+        embeddings = []
 
+        for img_name in os.listdir(person_name_folder):
 
-    for person in os.listdir(test_path):
-        folder = os.path.join(test_path, person)
+            img_path = os.path.join(person_name_folder, img_name)
+            img = cv2.imread(img_path)
 
-        for img_name in os.listdir(folder):
-            img = cv2.imread(os.path.join(folder, img_name))
+            if img is None:
+                continue
+
             emb = get_embedding(img)
 
             if emb is None:
                 continue
 
-            best_match = None
-            best_score = -1
+            embeddings.append(emb)
+            if len(embeddings) == 0:
+                continue
 
-            for name, db_emb in database.items():
-                score = cosine_similarity(emb, db_emb)
+            avg_emb = np.mean(embeddings, axis=0)
+        
+        emb_data[person] = avg_emb
+    
+    return emb_data
 
-                if score > best_score:
-                    best_score = score
-                    best_match = name
 
-            total += 1
 
-            if best_match == person and best_score >= threshold:
-                correct += 1
-            else:
-                false_reject += 1
+
