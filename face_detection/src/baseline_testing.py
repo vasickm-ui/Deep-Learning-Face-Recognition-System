@@ -180,7 +180,7 @@ def write_report(filepath, threshold, enroll_count, test_metrics, unknown_metric
         f.write("\n\n\n\n")
 
 
-enroll_count, threshold = 5, 0.65
+enroll_count, threshold = 5, 0.70
 data_dict = calculate_avg_embeddings('data/enroll', enroll_count)
 test_metrics = test_data_metrics(data_dict, 'data/test', threshold)
 unknown_metrics = unknown_data_metrics(data_dict, 'data/unknown', threshold)

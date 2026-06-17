@@ -20,3 +20,7 @@ Testing this particular baseline system we built there are few conclusions:
 
 \-In this particular system **threshold of 0.65** has been recognized as the best option.
 
+
+
+We used 3 datasets for testing. First one is **enrollment** dataset that was used to calculate average embeddings for each person. **Test** dataset was used for calculating false reject given that only familiar persons images are in that set. **Unknown** dataset was used to calculate false accept given that only unknown persons images are part of that set.
+

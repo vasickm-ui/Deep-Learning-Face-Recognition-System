@@ -114,10 +114,14 @@ False accept rate: 0.00%
 
 
 
+
+
+
+
 CONFIGURATION
 --------------------
 Threshold: 0.9
-Enroll images per person: 1
+Enroll images per person: 5
 
 TEST DATASET
 --------------------
@@ -125,19 +129,7 @@ Correct: 0
 Misidentification: 0
 False reject: 14
 Total: 14
-
-CONFIGURATION
---------------------
-Threshold: 0.9
-Enroll images per person: 1
-
-TEST DATASET
---------------------
-Correct: 0
-Misidentification: 0
-False reject: 14
-Total: 14
-Accuracy: 100.00%
+Accuracy: 0.00%
 
 UNKNOWN DATASET
 --------------------
@@ -151,39 +143,39 @@ False accept rate: 0.00%
 
 CONFIGURATION
 --------------------
-Threshold: 0.65
+Threshold: 0.83
 Enroll images per person: 5
 
 TEST DATASET
 --------------------
-Correct: 13
+Correct: 1
 Misidentification: 0
-False reject: 1
+False reject: 13
 Total: 14
 Accuracy: 7.14%
 
 UNKNOWN DATASET
 --------------------
-Correct reject: 8
-False accept: 1
+Correct reject: 9
+False accept: 0
 Total: 9
-False accept rate: 11.11%
+False accept rate: 0.00%
 
 
 
 
 CONFIGURATION
 --------------------
-Threshold: 0.65
+Threshold: 0.7
 Enroll images per person: 5
 
 TEST DATASET
 --------------------
-Correct: 13
+Correct: 10
 Misidentification: 0
-False reject: 1
+False reject: 4
 Total: 14
-Accuracy: 92.86%
+Accuracy: 71.43%
 
 UNKNOWN DATASET
 --------------------
