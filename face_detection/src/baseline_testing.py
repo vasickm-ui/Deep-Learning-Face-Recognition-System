@@ -18,12 +18,14 @@ def cosine_similarity(a, b):
     return np.dot(a, b)
 
 #this method calculates avg emedings per person and stores it in dict
-def calculate_avg_embeddings(enroll_path):
+def calculate_avg_embeddings(enroll_path, n):
     emb_data = {}
+    #going through folders
     for person in os.listdir(enroll_path):
         person_name_folder = os.path.join(enroll_path, person)
         embeddings = []
 
+        #going through image files
         for img_name in os.listdir(person_name_folder):
 
             img_path = os.path.join(person_name_folder, img_name)
@@ -39,8 +41,8 @@ def calculate_avg_embeddings(enroll_path):
                 continue
 
             embeddings.append(emb)
-            if len(embeddings) == 0:
-                continue
+            if len(embeddings) > n:
+                break
 
             avg_emb = np.mean(embeddings, axis=0)
         
@@ -88,9 +90,12 @@ def test_data_metrics(data_dict, test_path, threshold):
             
             n += 1
 
-    print(f"Correct: {correct}/{n}")
-    print(f"Misidentification: {misidentification}/{n}")
-    print(f"False reject: {false_reject}/{n}")
+    return {
+        "correct": correct,
+        "misidentification": misidentification,
+        "false_reject": false_reject,
+        "total": n
+    }
 
 def unknown_data_metrics(data_dict, unknown_path, threshold):
 
@@ -127,11 +132,13 @@ def unknown_data_metrics(data_dict, unknown_path, threshold):
         
         n += 1
 
-    print(f"Correct: {correct}/{n}")
-    print(f"False accept: {false_accept}/{n}")
+    return {
+        "correct": correct,
+        "false_accept": false_accept,
+        "total": n
+    }
 
-data_base = calculate_avg_embeddings("data/enroll")
-unknown_data_metrics(data_base, "data/unknown", 0.65)
+def print_report(enroll_n, threshold):
 
             
 
