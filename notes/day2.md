@@ -14,9 +14,7 @@ The model bundle used in this project was **FaceAnalysis buffalo\_l**, which per
 
 
 
-System is far from perfect it makes mistakes on images with bad quality and images with persons making some expressions. One of the solutions would be feeding the model with variations of images not just one "perfect" image. Model runs on CPU but it can be modified to run on GPU depending on our needs and computational complexity.
+System is far from perfect it makes mistakes on images with bad quality and images with persons making some expressions. One of the solutions would be feeding the model with variations of images not just one "perfect" image. Model runs on **CPU** but it can be modified to run on GPU depending on our needs and computational complexity.
 
-We could also experiment with treshold and with ways of calculating similarities between vectors. 
-
-
+We could also experiment with treshold and with ways of calculating similarities between vectors.
 

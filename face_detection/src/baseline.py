@@ -82,6 +82,8 @@ for emb, bbox in test_faces:
     )
 
     print("----------------------------------------------------------")
+
+    
 cv2.imwrite("results/fed_mur.jpg", test_img)
 cv2.namedWindow("Result", cv2.WINDOW_NORMAL)
 cv2.imshow("Result", test_img)
