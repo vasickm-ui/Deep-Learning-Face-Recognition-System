@@ -188,24 +188,29 @@ def write_report(filepath, threshold, enroll_count, test_metrics, unknown_metric
         f.write("\n\n\n\n")
 
 
-def write_table_txt(filepath, rows):
+def write_table_txt(filepath, rows, threshold, enroll):
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
     with open(filepath, "w", encoding="utf-8") as f:
         f.write("RESULTS TABLE\n")
         f.write("-" * 60 + "\n")
-        f.write(f"{'Enroll':<8} | {'Thresh':<8} | {'Acc':<12} | {'FRR':<12} | {'FAR':<12}\n")
-        f.write("-" * 65 + "\n")
+        f.write(f"{'Enroll':<12} | {'Threshold':<12} | {'Acc':<12} | {'FRR':<12} | {'FAR':<12}\n")
+        f.write("-" * 95 + "\n")
 
         for r in rows:
-            f.write(f"{r[0]:<8} | {r[1]:<8.2f} | {r[2]:<12.2f} | {r[3]:<12.2f} | {r[4]:<12.2f}\n")
+            f.write(f"{r[0]:<12} | {r[1]:<12.2f} | {r[2]:<12.2f} | {r[3]:<12.2f} | {r[4]:<12.2f}\n")
+
+        f.write(f"Optimal threshold: {threshold:.2f}\n")
+        f.write(f"Optimal number of enrollment images: {enroll:.2f}")
 
 table_path = "results/experiments.txt"
-optimal_threshold, optimal_enroll = 0, 0
+optimal_threshold, optimal_enroll, score = 0, 0, 0
 rows = []
-for enroll_count in [3]:
+score, max_score = 0, 0
+for enroll_count in [1, 3, 5]:
+
     db = calculate_avg_embeddings("data/enroll", enroll_count)
-    for threshold in [0.5, 0.65, 0.7, 0.85]:
+    for threshold in [0.5, 0.65, 0.7, 0.75, 0.85]:
 
         header = [
             "enroll_count",
@@ -219,6 +224,11 @@ for enroll_count in [3]:
         test_data = test_data_metrics(db, "data/test", threshold)
         unknown_data = unknown_data_metrics(db, "data/unknown", threshold)
 
+        score = 1 - (test_data["frr"]/100 + 1.5*unknown_data["far"]/100)/2
+        if score > max_score:
+            optimal_enroll = enroll_count
+            optimal_threshold = threshold
+
         rows.append([
             enroll_count,
             threshold,
@@ -227,7 +237,8 @@ for enroll_count in [3]:
             unknown_data["far"]
         ])
 
-    write_table_txt(table_path, rows)
+    write_table_txt(table_path, rows, optimal_threshold, optimal_enroll)
+    
 
 
 
