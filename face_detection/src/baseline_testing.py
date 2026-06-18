@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import csv
 from insightface.app import FaceAnalysis
 import os
 
@@ -41,11 +42,11 @@ def calculate_avg_embeddings(enroll_path, n):
                 continue
 
             embeddings.append(emb)
-            if len(embeddings) > n:
+            if len(embeddings) >= n:
                 break
 
-            avg_emb = np.mean(embeddings, axis=0)
         
+        avg_emb = np.mean(embeddings, axis=0)
         emb_data[person] = avg_emb
     
     return emb_data
@@ -90,11 +91,15 @@ def test_data_metrics(data_dict, test_path, threshold):
             
             n += 1
 
+    acc = round(correct/n, 4)*100
+    frr = round(false_reject/n,4)*100
     return {
+        "acc":acc,
         "correct": correct,
         "misidentification": misidentification,
         "false_reject": false_reject,
-        "total": n
+        "total": n,
+        "frr":frr
     }
 
 def unknown_data_metrics(data_dict, unknown_path, threshold):
@@ -132,10 +137,12 @@ def unknown_data_metrics(data_dict, unknown_path, threshold):
         
         n += 1
 
+    far = round((false_accept / n)*100, 4)
     return {
         "correct": correct,
         "false_accept": false_accept,
-        "total": n
+        "total": n,
+        "far": far
     }
 
 
@@ -180,11 +187,49 @@ def write_report(filepath, threshold, enroll_count, test_metrics, unknown_metric
         f.write("\n\n\n\n")
 
 
-enroll_count, threshold = 5, 0.709
-data_dict = calculate_avg_embeddings('data/enroll', enroll_count)
-test_metrics = test_data_metrics(data_dict, 'data/test', threshold)
-unknown_metrics = unknown_data_metrics(data_dict, 'data/unknown', threshold)
-write_report('results/baseline.txt', threshold, enroll_count, test_metrics, unknown_metrics)
+def write_csv_row(filepath, row, header=None):
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+    file_exists = os.path.exists(filepath)
+
+    with open(filepath, "a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+
+        # write header only once
+        if not file_exists and header:
+            writer.writerow(header)
+
+        writer.writerow(row)
+
+csv_path = "results/experiments.csv"
+optimal_threshold, optimal_enroll = 0, 0
+for enroll_count in [3]:
+    db = calculate_avg_embeddings("data/enroll", enroll_count)
+    for threshold in [0.5, 0.65, 0.7, 0.85]:
+
+        header = [
+            "enroll_count",
+            "threshold",
+            "accuracy",
+            "frr",
+            "far"
+        ]
+
+
+        test_data = test_data_metrics(db, "data/test", threshold)
+        unknown_data = unknown_data_metrics(db, "data/unknown", threshold)
+
+        row = [
+            enroll_count,
+            threshold,
+            test_data["acc"],
+            test_data["frr"],
+            unknown_data["far"]
+        ]
+
+        write_csv_row(csv_path, row, header)
+
+
 
             
 
