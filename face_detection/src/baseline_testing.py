@@ -3,6 +3,7 @@ import cv2
 import csv
 from insightface.app import FaceAnalysis
 import os
+import pandas as pd
 
 app = FaceAnalysis(name="buffalo_l")  # pretrenirani InsightFace model
 app.prepare(ctx_id=0)
@@ -187,22 +188,21 @@ def write_report(filepath, threshold, enroll_count, test_metrics, unknown_metric
         f.write("\n\n\n\n")
 
 
-def write_csv_row(filepath, row, header=None):
+def write_table_txt(filepath, rows):
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
-    file_exists = os.path.exists(filepath)
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write("RESULTS TABLE\n")
+        f.write("-" * 60 + "\n")
+        f.write(f"{'Enroll':<8} | {'Thresh':<8} | {'Acc':<12} | {'FRR':<12} | {'FAR':<12}\n")
+        f.write("-" * 65 + "\n")
 
-    with open(filepath, "a", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
+        for r in rows:
+            f.write(f"{r[0]:<8} | {r[1]:<8.2f} | {r[2]:<12.2f} | {r[3]:<12.2f} | {r[4]:<12.2f}\n")
 
-        # write header only once
-        if not file_exists and header:
-            writer.writerow(header)
-
-        writer.writerow(row)
-
-csv_path = "results/experiments.csv"
+table_path = "results/experiments.txt"
 optimal_threshold, optimal_enroll = 0, 0
+rows = []
 for enroll_count in [3]:
     db = calculate_avg_embeddings("data/enroll", enroll_count)
     for threshold in [0.5, 0.65, 0.7, 0.85]:
@@ -219,15 +219,15 @@ for enroll_count in [3]:
         test_data = test_data_metrics(db, "data/test", threshold)
         unknown_data = unknown_data_metrics(db, "data/unknown", threshold)
 
-        row = [
+        rows.append([
             enroll_count,
             threshold,
             test_data["acc"],
             test_data["frr"],
             unknown_data["far"]
-        ]
+        ])
 
-        write_csv_row(csv_path, row, header)
+    write_table_txt(table_path, rows)
 
 
 
