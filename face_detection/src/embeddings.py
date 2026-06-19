@@ -2,8 +2,9 @@ import numpy as np
 import cv2
 from insightface.app import FaceAnalysis
 import os
+import pickle
 
-app = FaceAnalysis(name="buffalo_l")  # pretrenirani InsightFace model
+app = FaceAnalysis(name="buffalo_l")  # pretrained InsightFace model
 app.prepare(ctx_id=0)
 
 def get_embedding(img):
@@ -17,23 +18,21 @@ def cosine_similarity(a, b):
     b = b / np.linalg.norm(b)
     return np.dot(a, b)
 
-#this method calculates avg emedings per person and stores it in dict
-def calculate_avg_embeddings(enroll_path, n):
-    emb_data = {}
-    #going through folders
+#save embeddings in file so that we dont need to calculate them again 
+def build_embedding_db(enroll_path, save_path):
+    db = {}
+
     for person in os.listdir(enroll_path):
-        person_name_folder = os.path.join(enroll_path, person)
+        person_folder = os.path.join(enroll_path, person)
+
         embeddings = []
 
-        #going through image files
-        for img_name in os.listdir(person_name_folder):
-
-            img_path = os.path.join(person_name_folder, img_name)
+        for img_name in os.listdir(person_folder):
+            img_path = os.path.join(person_folder, img_name)
             img = cv2.imread(img_path)
 
             if img is None:
-                print(f"Cant load image with path {img_path}")
-                exit()
+                continue
 
             emb = get_embedding(img)
 
@@ -41,15 +40,13 @@ def calculate_avg_embeddings(enroll_path, n):
                 continue
 
             embeddings.append(emb)
-            if len(embeddings) >= n:
-                break
 
-        
-        avg_emb = np.mean(embeddings, axis=0)
-        emb_data[person] = avg_emb
-    
-    return emb_data
+        db[person] = embeddings
 
+    with open(save_path, "wb") as f:
+        pickle.dump(db, f)
+
+#calculating image quality
 def quality_score(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -76,6 +73,18 @@ def quality_score(img):
     )
 
     return quality
+
+#this method calculates avg emedings per person and stores it in dict
+def calculate_avg_embeddings(emb_data, n):
+    avg_data = {}
+
+    for person, embeddings in emb_data.items():
+        if len(embeddings) == 0:
+            break
+
+        avg_data[person] = np.mean(embeddings[:n], axis=0)
+
+    return avg_data
 
 def weighted_avg_embeddings(enroll_path, n):
     emb_data = {}
@@ -125,3 +134,23 @@ def weighted_avg_embeddings(enroll_path, n):
         emb_data[person] = avg_emb
 
     return emb_data
+
+def load_db(path):
+    with open(path, "rb") as f:
+        return pickle.load(f)
+    
+if __name__ == "__main__":
+    enroll_path = "data/enroll"
+    save_path = "data/vectors/embeddings.pkl"
+
+    print("Building embedding DB...")
+    build_embedding_db("data/enroll", "data/vectors/enroll_embeddings.pkl")
+    print("Done")
+
+    print("Building embedding DB for test data")
+    build_embedding_db("data/test", "data/vectors/test_embeddings.pkl")
+    print("Done")
+
+    print("Building embedding DB for unknown data")
+    build_embedding_db("data/unknown", "data/vectors/unknown_embeddings.pkl")
+    print("Done")
