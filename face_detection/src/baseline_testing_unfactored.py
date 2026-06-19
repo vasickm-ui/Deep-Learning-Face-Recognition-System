@@ -226,6 +226,7 @@ for enroll_count in [1, 3, 5]:
 
         score = 1 - (test_data["frr"]/100 + 1.5*unknown_data["far"]/100)/2
         if score > max_score:
+            max_score = score
             optimal_enroll = enroll_count
             optimal_threshold = threshold
 

@@ -20,3 +20,5 @@ I was reading about **other ways to measure optimal performance** of this system
 
 Other ways to **calculate embeddings** like medoid, clustering, best-quality, weighted average embedding.
 
+Reading about **vector databases** and their usage.
+
