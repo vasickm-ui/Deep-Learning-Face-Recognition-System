@@ -1,7 +1,10 @@
 import cv2
 from recognize_frame import recognize_frame
 
-def process_video(input_path, output_path, db, threshold=0.5):
+
+
+
+def process_video(input_path, output_path, db, threshold=0.65):
 
     cap = cv2.VideoCapture(input_path)
 

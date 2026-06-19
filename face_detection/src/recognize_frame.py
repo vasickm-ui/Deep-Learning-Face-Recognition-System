@@ -1,8 +1,10 @@
 from embeddings import cosine_similarity, quality_score
 from insightface.app import FaceAnalysis
 
+app = FaceAnalysis(name="buffalo_l")  # pretrained InsightFace model
+app.prepare(ctx_id=0)
 
-def recognize_frame(frame, db, threshold, app):
+def recognize_frame(frame, db, threshold=0.65):
     results = []
 
     faces = app.get(frame)
