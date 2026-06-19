@@ -3,3 +3,4 @@ numpy
 insightface
 onnxruntime
 pandas
+yt-dlp

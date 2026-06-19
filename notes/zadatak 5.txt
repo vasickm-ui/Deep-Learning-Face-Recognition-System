@@ -1,0 +1,120 @@
+D5 — Obrada video-snimka i live prikaz sa kamere
+Povezati postojeći sistem za detekciju i prepoznavanje lica sa video-ulazom. Prvo obraditi unapred snimljeni video kao niz frejmova, a zatim isti pipeline primeniti na kameru u realnom vremenu.
+Cilj
+Pokazati da ista logika za detekciju, proveru kvaliteta i prepoznavanje može da se koristi nad pojedinačnom slikom, video-snimkom i frejmovima sa kamere. Ispitati stabilnost rezultata kroz vreme i osnovne performanse sistema u realnim uslovima.
+Zadaci
+Prilagoditi recognition funkciju za rad sa frejmom
+Obezbediti funkciju koja kao ulaz prima sliku već učitanu u memoriju, a ne samo putanju do slike.
+Na primer:
+recognize_frame(frame)
+Funkcija treba da vrati listu rezultata za sva pronađena lica, uključujući:
+bounding box,
+status,
+ime poznate osobe kada postoji,
+score sličnosti.
+Obraditi unapred snimljeni video
+Otvoriti video pomoću cv2.VideoCapture, čitati ga frejm po frejm i svaki izabrani frejm proslediti postojećem recognition pipeline-u.
+Za svako lice na frejmu prikazati:
+pravougaonik oko lica,
+ime poznate osobe,
+status unknown,
+status low_quality,
+po mogućnosti score sličnosti.
+Sačuvati anotirani video
+Po mogućnosti sačuvati rezultat u novi video-fajl, sa ucrtanim okvirima i rezultatima prepoznavanja.
+Proveriti:
+da izlazni video ima odgovarajuću rezoluciju,
+da se koristi odgovarajući FPS,
+da se svi resursi pravilno zatvaraju.
+Analizirati stabilnost kroz frejmove
+Posmatrati da li se rezultat za isto lice menja kroz uzastopne frejmove.
+Zabeležiti primere kao što su:
+prelazak iz poznate osobe u unknown,
+promena identiteta kroz frejmove,
+promena statusa zbog mutnoće ili pokreta,
+gubitak detekcije kada je lice okrenuto ili zaklonjeno.
+Optimizovati učestalost obrade
+Ako je obrada spora, ne obrađivati nužno svaki frejm. Omogućiti obradu svakog drugog, trećeg ili petog frejma, dok se poslednji rezultat prikazuje između dve obrade.
+Zabeležiti uticaj ove odluke na:
+brzinu prikaza,
+odziv sistema,
+stabilnost rezultata.
+
+ 
+Primer strukture
+src/
+
+face_model.py
+
+recognizer.py
+
+quality.py
+
+draw_results.py
+
+video_demo.py
+
+camera_demo.py
+ 
+cilj davideo_demo.py i camera_demo.py upravljaju izvorom frejmova i prikazom, dok detekcija i prepoznavanje treba da ostanu u postojećim modulima
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+onda evo i deo sa kamerom
+Povezati sistem sa kamerom
+Nakon što obrada video-fajla radi, zameniti putanju do video-fajla indeksom kamere:
+cv2.VideoCapture(0)
+Koristiti isti recognition pipeline i isti način prikazivanja rezultata.
+Dodati kontrolu pokretanja i zaustavljanja
+Omogućiti:
+izlazak pritiskom na taster q,
+pravilno oslobađanje kamere,
+zatvaranje svih OpenCV prozora,
+prikaz jasne poruke ako kamera ili video ne mogu da se otvore.
+Ne čuvati frejmove sa kamere bez potrebe
+Frejmove obrađivati u memoriji.
+ 
+Testirati:
+na primer, 
+poznatu osobu u snimljenom videu,
+nepoznatu osobu,
+ulazak i izlazak lica iz kadra,
+promenu udaljenosti od kamere,
+okretanje glave,
+brzo kretanje i zamućenje,
+kombinaciju poznatih i nepoznatih osoba
+ili sta god ti padne na pamet, cilj steći osećaj šta su problematične situacije
+Dokumentovanje
+U kratkoj belešci navesti:
+da li je isti pipeline korišćen za sliku, video i kameru,
+gde se rezultati najviše menjaju kroz frejmove,
+koje situacije izazivaju unknown ili low_quality,
+koliko često se frejmovi obrađuju,
+kakav je uticaj učestalosti obrade na brzinu sistema,
+koja poboljšanja bi mogla da povećaju stabilnost kroz vreme.
+Cilj:
+sistem uspešno čita i obrađuje video-snimak,
+svako lice dobija poseban rezultat,
+poznate i nepoznate osobe se označavaju odgovarajućim statusom,
+loš kvalitet lica može da bude odbijen,
+isti pipeline radi i sa kamerom,
+aplikacija može pravilno da se zatvori,
+dokumentovana su zapažanja o stabilnosti i performansama.
+Dodatno, ako ostane vremena
+prikazati približan FPS,
+sačuvati anotirani video,
+uporediti obradu svakog frejma i svakog petog frejma,
+uvesti jednostavnu stabilizaciju odluke kroz nekoliko uzastopnih frejmova,
+sprečiti treperenje oznake između imena i statusa unknown.
+ 
