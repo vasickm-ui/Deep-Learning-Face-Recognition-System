@@ -69,7 +69,12 @@ def process_video(input_path, output_path, db, frame_rate, threshold=0.65):
 
 def process_camera(db, frame_rate=5, threshold=0.65):
 
-    cap = cv2.VideoCapture(0)
+    #testing camera connection
+    cap = cv2.VideoCapture(0, cv2.CAP_ANY)
+    print("Camera opened:", cap.isOpened())
+    print("====================================")
+
+
 
     frame_id = 0
     last_results = None

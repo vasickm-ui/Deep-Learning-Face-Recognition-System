@@ -8,5 +8,7 @@ Previously implemented functions work, but slowly. I tried changing the number o
 
 ## Camera stream processing
 
+First step is accessing the camera stream. OpenCV had problems finding a backend that could open the camera device. We needed to set the backend choice to CAP\_ANY.
+
 
 
