@@ -11,27 +11,13 @@ def recognize_frame(frame, db, threshold=0.65):
 
     for face in faces:
 
-        x1, y1, x2, y2 = face.bbox.astype(int)
-        crop = frame[y1:y2, x1:x2]
-
         # default
         status = "unknown"
         name = None
         best_score = -1
 
-        # quality check
-        q = quality_score(crop)
-
-        if q < 0.25:
-            results.append({
-                "bounding_box": {"left": x1, "top": y1, "right": x2, "bottom": y2},
-                "status": "low_quality",
-                "name": None,
-                "similarity_score": 0.0
-            })
-            continue
-
         emb = face.embedding
+        x1, y1, x2, y2 = face.bbox.astype(int)
 
         # matching
         for person, db_emb in db.items():

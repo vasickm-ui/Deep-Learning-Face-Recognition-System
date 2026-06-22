@@ -10,6 +10,7 @@ score, max_score = 0, 0
 enroll_db = load_db("data/vectors/enroll_embeddings.pkl")
 test_db = load_db("data/vectors/test_embeddings.pkl")
 unknown_db = load_db("data/vectors/unknown_embeddings.pkl")
+
 for k, v in test_db.items():
     print(k)
     print(type(v))
