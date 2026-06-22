@@ -117,4 +117,70 @@ sačuvati anotirani video,
 uporediti obradu svakog frejma i svakog petog frejma,
 uvesti jednostavnu stabilizaciju odluke kroz nekoliko uzastopnih frejmova,
 sprečiti treperenje oznake između imena i statusa unknown.
+
+
+
+D6
+Cilj
+Potvrditi da sistem na ulazu sa kamere pravilno detektuje i prepoznaje poznate osobe, odbija nepoznate osobe, nekvalitetna lica  i daje dovoljno stabilne rezultate kroz uzastopne frejmove.
+Očekivani rezultati
+Pokretanje kamere
+Uspešno otvoriti kameru i prikazati video u realnom vremenu.
+Prikazivati obrađene frejmove bez prekidanja aplikacije.
+Omogućiti adekvatno zaustavljanje aplikacije sto podrazumeva oslobodjanje kamere i zatvaranje svih OpenCV prozora
+Očekivani rezultat: Kamera se uspešno pokreće, prikaz je funkcionalan, a aplikacija može pravilno da se zaustavi.
+Poznata osoba u kadru
+Poznata osoba treba da stane ispred kamere u uobičajenim uslovima osvetljenja i na odgovarajućoj udaljenosti.
+Očekivani rezultat:
+prikazati okvir oko lica,
+prikazati odgovarajuće ime,
+prikazati score sličnosti,
+zadržati isti identitet kroz većinu uzastopnih obrađenih frejmova.
+Kao prihvatljiv rezultat može se definisati da osoba bude pravilno prepoznata u najmanje 4 od 5 uzastopnih obrađenih frejmova u stabilnim uslovima. Ispratiti performanse u razlicitim uslovima.
+Nepoznata osoba u kadru
+Osoba koja nije deo enroll skupa treba da stane ispred kamere.
+Očekivani rezultat:
+detektovati lice,
+ne dodeliti ime najbliže poznate osobe ako score ne prelazi izabrani threshold,
+prikazati status unknown.
+Nepoznata osoba ne treba da bude označena kao poznata samo zato što je njen embedding najbliži nekoj osobi iz baze.
+Lice lošeg kvaliteta
+Testirati slučajeve:
+lice je predaleko od kamere,
+lice je premalo,
+slika je zamućena usled pokreta,
+osvetljenje je veoma loše,
+lice je delimično van kadra.
+prekriti pola lica, eventualno staviti naocare
+Očekivani rezultat:
+detektovati da ulaz nije dovoljno kvalitetan za pouzdano prepoznavanje,
+prikazati status low_quality,
+ne vraćati ime osobe ako kvalitet ne zadovoljava definisane kriterijume.
+Ulazak i izlazak iz kadra
+Osoba treba da uđe u kadar, zadrži se nekoliko sekundi i zatim izađe iz kadra.
+Očekivani rezultat:
+prikazati rezultat kada je lice prisutno,
+ukloniti okvir i oznaku kada lice više nije detektovano,
+ne zadržavati zastareli rezultat nakon izlaska osobe iz kadra.
+Promena udaljenosti i ugla
+Poznata osoba treba da:
+priđe kameri,
+udalji se od kamere,
+blago okrene glavu,
+promeni položaj u kadru.
+Očekivani rezultat:
+zadržati identitet dok su lice i kvalitet slike dovoljno dobri,
+vratiti low_quality ili unknown kada uslovi više nisu dovoljni,
+zabeležiti pri kojim uglovima i udaljenostima sistem počinje da greši.
+7. Stabilnost rezultata kroz vreme
+Posmatrati rezultat za istu osobu kroz niz uzastopnih frejmova.
+Očekivani rezultat:
+rezultat ne treba često da prelazi između imena, unknown i low_quality kada osoba miruje u stabilnim uslovima,
+evidentirati slučajeve treperenja ili promene identiteta,
+po potrebi obrađivati svaki drugi, treći ili peti frejm radi boljih performansi.
+Ako se rezultat menja kroz frejmove, zabeležiti:
+broj promena statusa,
+uslove u kojima se promena događa,
+mogući uzrok,
+moguće poboljšanje.
  

@@ -2,11 +2,11 @@ import cv2
 from recognize_frame import recognize_frame
 
 
+def process_video(source, output_path, db, frame_rate, threshold=0.65):
 
-
-def process_video(input_path, output_path, db, threshold=0.65):
-
-    cap = cv2.VideoCapture(input_path)
+    #if we want to load camera stream we must set source value 
+    #to 0 instead of path string
+    cap = cv2.VideoCapture(source)
     fps = cap.get(cv2.CAP_PROP_FPS)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -22,7 +22,7 @@ def process_video(input_path, output_path, db, threshold=0.65):
         if not ret:
             break
 
-        if frame_id % 10 != 0:   # skip every other frame
+        if frame_id % frame_rate != 0:   # skip every n-th frame
             frame_id += 1
             continue
 
