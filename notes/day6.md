@@ -10,5 +10,7 @@ Previously implemented functions work, but slowly. I tried changing the number o
 
 First step is accessing the camera stream. OpenCV had problems finding a backend that could open the camera device. We needed to set the backend choice to CAP\_ANY.
 
+I saved couple of my personal pictures, calculated average embeddings and added that to vector database files. System is able to recognize my face and other unknown faces.
 
+I tested the camera in various cases. It works fine when I stand far away from the camera and when the image is blurry. However, when I show only half of my face, the camera either detects me as an unknown person or fails to detect any face at all. When I cover my eyes, the camera still detects my face, but the similarity score drops to a value very close to the minimum threshold. When i get out of frame there is no detection at all.
 
