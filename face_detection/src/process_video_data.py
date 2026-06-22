@@ -67,14 +67,21 @@ def process_video(input_path, output_path, db, frame_rate, threshold=0.65):
     cv2.destroyAllWindows()
 
 
-def process_camera(db, frame_rate=5, threshold=0.65):
+def process_camera(db, output_path, frame_rate=5, threshold=0.65):
 
-    #testing camera connection
     cap = cv2.VideoCapture(0, cv2.CAP_ANY)
     print("Camera opened:", cap.isOpened())
-    print("====================================")
 
+    # get camera properties
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    if fps == 0 or fps is None:
+        fps = 30  
 
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
     frame_id = 0
     last_results = None
@@ -111,6 +118,7 @@ def process_camera(db, frame_rate=5, threshold=0.65):
                             0.6,
                             color,
                             2)
+        out.write(frame)
 
         cv2.imshow("Camera", frame)
 
@@ -120,4 +128,5 @@ def process_camera(db, frame_rate=5, threshold=0.65):
         frame_id += 1
 
     cap.release()
+    out.release()
     cv2.destroyAllWindows()

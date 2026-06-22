@@ -4,4 +4,4 @@ from embeddings import calculate_avg_embeddings, load_db
 if __name__ == "__main__":
     db_vasic = load_db("data/vectors/vasic_embeddings.pkl")
     db = calculate_avg_embeddings(db_vasic, 6)
-    process_camera(db=db)
+    process_camera(db, "results/camera.mp4")
