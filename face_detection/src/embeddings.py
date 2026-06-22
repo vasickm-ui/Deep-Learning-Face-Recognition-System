@@ -140,17 +140,19 @@ def load_db(path):
         return pickle.load(f)
     
 if __name__ == "__main__":
-    enroll_path = "data/enroll"
-    save_path = "data/vectors/embeddings.pkl"
+    print("Buildinf DB")
+    # print("Buliding embedding DB for Vasic")
+    # build_embedding_db("data/company_persons", "data/vectors/vasic_embeddings.pkl")
+    # print("Done")
 
-    print("Building embedding DB...")
-    build_embedding_db("data/enroll", "data/vectors/enroll_embeddings.pkl")
-    print("Done")
+    # print("Building embedding DB...")
+    # build_embedding_db("data/enroll", "data/vectors/enroll_embeddings.pkl")
+    # print("Done")
 
-    print("Building embedding DB for test data")
-    build_embedding_db("data/test", "data/vectors/test_embeddings.pkl")
-    print("Done")
+    # print("Building embedding DB for test data")
+    # build_embedding_db("data/test", "data/vectors/test_embeddings.pkl")
+    # print("Done")
 
-    print("Building embedding DB for unknown data")
-    build_embedding_db("data/unknown", "data/vectors/unknown_embeddings.pkl")
-    print("Done")
+    # print("Building embedding DB for unknown data")
+    # build_embedding_db("data/unknown", "data/vectors/unknown_embeddings.pkl")
+    # print("Done")
