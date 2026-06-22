@@ -1,4 +1,4 @@
-from process_video import process_video
+from process_video_data import process_video
 from embeddings import load_db, calculate_avg_embeddings
 
 
