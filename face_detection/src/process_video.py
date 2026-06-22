@@ -7,7 +7,6 @@ from recognize_frame import recognize_frame
 def process_video(input_path, output_path, db, threshold=0.65):
 
     cap = cv2.VideoCapture(input_path)
-
     fps = cap.get(cv2.CAP_PROP_FPS)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -15,6 +14,7 @@ def process_video(input_path, output_path, db, threshold=0.65):
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")
     out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
+    #this could help us with debugging
     frame_id = 0
 
     while True:
@@ -22,9 +22,13 @@ def process_video(input_path, output_path, db, threshold=0.65):
         if not ret:
             break
 
+        if frame_id % 10 != 0:   # skip every other frame
+            frame_id += 1
+            continue
+
         results = recognize_frame(frame, db, threshold)
 
-        # crtanje
+        #draw
         for r in results:
             box = r["bounding_box"]
 

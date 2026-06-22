@@ -1,10 +1,5 @@
 from process_video import process_video
 from embeddings import load_db, calculate_avg_embeddings
-from insightface.app import FaceAnalysis
-
-
-app = FaceAnalysis(name="buffalo_l")  # pretrained InsightFace model
-app.prepare(ctx_id=0)
 
 
 if __name__ == "__main__":
@@ -14,6 +9,6 @@ if __name__ == "__main__":
 
     process_video(
         input_path="data/video1.mp4",
-        output_path="tennis_annotated.mp4",
+        output_path="results/tennis_annotated.mp4",
         db=db
     )
