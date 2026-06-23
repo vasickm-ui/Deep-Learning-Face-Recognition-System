@@ -77,7 +77,7 @@ def process_camera(db, output_path, frame_rate, threshold=0.65):
     fps = cap.get(cv2.CAP_PROP_FPS)
     print(f"fps: {fps}")
     if fps == 0 or fps is None:
-        fps = 5  
+        fps = 6  
 
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -87,6 +87,9 @@ def process_camera(db, output_path, frame_rate, threshold=0.65):
 
     frame_id = 0
     last_results = None
+
+    written = 0
+    start = time.time()
 
     while True:
         ret, frame = cap.read()
@@ -125,12 +128,21 @@ def process_camera(db, output_path, frame_rate, threshold=0.65):
                             2)
         
         out.write(frame)
+        written += 1
         cv2.imshow("Camera", frame)
 
         if cv2.waitKey(1) & 0xFF == 27:
             break
 
         frame_id += 1
+
+    end_time = time.time()
+    duration = end_time - start
+    real_fps = written / duration
+
+    print("Total frames:", written)
+    print("Duration (s):", duration)
+    print("Real FPS:", real_fps)
 
     cap.release()
     out.release()
