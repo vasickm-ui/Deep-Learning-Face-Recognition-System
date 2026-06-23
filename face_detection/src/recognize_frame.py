@@ -19,8 +19,10 @@ def recognize_frame(frame, db, threshold=0.65):
 
         emb = face.embedding
         x1, y1, x2, y2 = face.bbox.astype(int)
+        face_crop = frame[y1:y2, x1:x2]
 
-        if quality_score(face) < 0.4:
+        if quality_score(face_crop) < 0.1:
+            print("Bad quality!")
             results.append({
                 "bounding_box": {"left": x1, "top": y1, "right": x2, "bottom": y2},
                 "status": "unknown",
@@ -28,6 +30,7 @@ def recognize_frame(frame, db, threshold=0.65):
                 "similarity_score": 0.0
             })
             continue
+        print("Good quality")
 
 
         # face_crop = frame[y1:y2, x1:x2]

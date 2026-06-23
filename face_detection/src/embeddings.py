@@ -48,31 +48,41 @@ def build_embedding_db(enroll_path, save_path):
 
 #calculating image quality
 def quality_score(img):
+
+    if img is None or img.size == 0:
+        return 0.0
+
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    h, w = gray.shape
+
+    if h < 60 or w < 60:
+        return 0.0
+
+    if gray.std() < 18:
+        return 0.0
+
+
+    edges = cv2.Canny(gray, 50, 150)
+    edge_density = np.mean(edges > 0)
+
+    if edge_density < 0.01:
+        return 0.0
 
     blur = cv2.Laplacian(gray, cv2.CV_64F).var()
-    blur_score = min(blur / 150.0, 1.0)  # normalize
+    blur_score = min(blur / 150.0, 1.0)
 
     brightness = np.mean(gray)
-    if brightness < 40:
-        brightness_score = brightness / 40.0
-    elif brightness > 220:
-        brightness_score = (255 - brightness) / 35.0
-    else:
-        brightness_score = 1.0
-
+    brightness_score = 1.0 - abs(brightness - 120) / 120
     brightness_score = np.clip(brightness_score, 0.0, 1.0)
 
-    contrast = gray.std()
-    contrast_score = min(contrast / 40.0, 1.0)
-
     quality = (
-        0.5 * blur_score +
-        0.25 * brightness_score +
-        0.25 * contrast_score
+        0.6 * blur_score +
+        0.3 * edge_density +
+        0.1 * brightness_score
     )
 
     return quality
+
 
 #this method calculates avg emedings per person and stores it in dict
 def calculate_avg_embeddings(emb_data, n):
