@@ -39,16 +39,16 @@ def recognize_frame(frame, db, threshold=0.65):
         #     continue
 
     
-        # is_live, live_score = check_liveness(face_crop, threshold=0.15)
+        is_live, live_score = check_liveness(face_crop, threshold=0.98)
 
-        # if not is_live:
-        #     results.append({
-        #         "bounding_box": {"left": x1, "top": y1, "right": x2, "bottom": y2},
-        #         "status": "spoof",
-        #         "name": None,
-        #         "similarity_score": 0.0
-        #     })
-        #     continue
+        if not is_live:
+            results.append({
+                "bounding_box": {"left": x1, "top": y1, "right": x2, "bottom": y2},
+                "status": "spoof",
+                "name": None,
+                "similarity_score": 0.0
+            })
+            continue
 
         # matching
         for person, db_emb in db.items():
