@@ -57,6 +57,7 @@ def process_video(input_path, output_path, db, frame_rate, threshold=0.65):
 
         cv2.imshow("Video Recognition", frame)
 
+        #press esc to exit
         if cv2.waitKey(1) & 0xFF == 27:
             break
 
@@ -67,7 +68,7 @@ def process_video(input_path, output_path, db, frame_rate, threshold=0.65):
     cv2.destroyAllWindows()
 
 
-def process_camera(db, output_path, frame_rate=5, threshold=0.65):
+def process_camera(db, output_path, frame_rate=2, threshold=0.65):
 
     cap = cv2.VideoCapture(0, cv2.CAP_ANY)
     print("Camera opened:", cap.isOpened())
@@ -122,6 +123,7 @@ def process_camera(db, output_path, frame_rate=5, threshold=0.65):
 
         cv2.imshow("Camera", frame)
 
+        #press esc to exit
         if cv2.waitKey(1) & 0xFF == 27:
             break
 

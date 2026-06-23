@@ -140,7 +140,8 @@ def load_db(path):
         return pickle.load(f)
     
 if __name__ == "__main__":
-    print("Buildinf DB")
+    #These scripts are runed only once to create vector db
+    print("Building DB")
     # print("Buliding embedding DB for Vasic")
     # build_embedding_db("data/company_persons", "data/vectors/vasic_embeddings.pkl")
     # print("Done")
