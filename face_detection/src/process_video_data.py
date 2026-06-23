@@ -1,5 +1,6 @@
 import cv2
 from recognize_frame import recognize_frame
+import time
 
 
 def process_video(input_path, output_path, db, frame_rate, threshold=0.65):
@@ -68,15 +69,15 @@ def process_video(input_path, output_path, db, frame_rate, threshold=0.65):
     cv2.destroyAllWindows()
 
 
-def process_camera(db, output_path, frame_rate=2, threshold=0.65):
+def process_camera(db, output_path, frame_rate, threshold=0.65):
 
     cap = cv2.VideoCapture(0, cv2.CAP_ANY)
     print("Camera opened:", cap.isOpened())
 
-    # get camera properties
     fps = cap.get(cv2.CAP_PROP_FPS)
+    print(f"fps: {fps}")
     if fps == 0 or fps is None:
-        fps = 30  
+        fps = 5  
 
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -90,18 +91,21 @@ def process_camera(db, output_path, frame_rate=2, threshold=0.65):
     while True:
         ret, frame = cap.read()
         if not ret:
+            print("Problem with frame load")
             break
 
+        # recognize face only every n-th frame
         if frame_id % frame_rate == 0:
             last_results = recognize_frame(frame, db, threshold)
 
+        # drawing always uses the last result
         if last_results:
             for r in last_results:
                 box = r["bounding_box"]
 
                 color = (0, 255, 0) if r["status"] == "known" else \
-                        (0, 0, 255) if r["status"] == "unknown" else \
-                        (255, 0, 0)
+                         (0, 0, 255) if r["status"] == "unknown" else \
+                         (255, 0, 0)
 
                 cv2.rectangle(frame,
                               (box["left"], box["top"]),
@@ -119,11 +123,10 @@ def process_camera(db, output_path, frame_rate=2, threshold=0.65):
                             0.6,
                             color,
                             2)
+        
         out.write(frame)
-
         cv2.imshow("Camera", frame)
 
-        #press esc to exit
         if cv2.waitKey(1) & 0xFF == 27:
             break
 
