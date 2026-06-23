@@ -12,7 +12,7 @@ I experimented with these parameters and performed some calculations. So far, th
 
 ## Anti-spoofing check and liveness detection
 
-At this point, the system can recognize faces and correctly identify my face, displaying my name and a similarity score. The problem is that it treats videos and photos of my face as if they were a real person. We need to implement an anti-spoofing check to distinguish between a live person and images or recordings. We are gonna use minifasnet\_v2.onnx model to detect spoof images and liveness. This model is open source. 
+At this point, the system can recognize faces and correctly identify my face, displaying my name and a similarity score. The problem is that it treats videos and photos of my face as if they were a real person. We need to implement an anti-spoofing check to distinguish between a live person and images or recordings. We are gonna use minifasnet\_v2.onnx model to detect spoof images and liveness. This model is open source. We also need to implement liveness detection that asks user to do some specific movement. 
 
 
 
