@@ -8,3 +8,9 @@ Both the video reader and video writer have an FPS-related parameter. In the vid
 
 I experimented with these parameters and performed some calculations. So far, the best performance is achieved when detection is performed on every third frame, and the output video is written at 6 frames per second.
 
+
+
+## Anti-spoofing check and liveness detection
+
+At this point, the system can recognize faces and correctly identify my face, displaying my name and a similarity score. The problem is that it treats videos and photos of my face as if they were a real person. We need to implement an anti-spoofing check to distinguish between a live person and images or recordings.
+

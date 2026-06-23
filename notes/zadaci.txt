@@ -183,4 +183,61 @@ broj promena statusa,
 uslove u kojima se promena događa,
 mogući uzrok,
 moguće poboljšanje.
+
+
+
+
+
+
+
+
+
+
+D7 — Anti-spoofing provera i liveness detekcija
+Ispitati da li postojeći sistem za prepoznavanje lica može biti prevaren korišćenjem lica poznate osobe na telefonu ili video-snimku. Istražiti i, ukoliko je moguće, implementirati proveru živosti lica pre konačne odluke o identitetu.
+Cilj
+Pokazati razliku između prepoznavanja identiteta i potvrde da se ispred kamere nalazi živa osoba. Proveriti osnovne spoofing scenarije, uvesti liveness proveru i dokumentovati njene rezultate i ograničenja.
+Zadaci
+Proveriti rad postojećeg sistema i pripremiti test scenarije
+Provere:
+da li je lice detektovano,
+da li je osoba prepoznata,
+koji identitet i score su vraćeni,
+da li je spoof pokušaj prihvaćen kao prava osoba.
+Test scenariji:
+pravu poznatu osobu ispred kamere,
+fotografiju poznate osobe prikazanu na telefonu,
+video-snimak poznate osobe prikazan na telefonu/ekranu.
+Istražiti anti-spoofing pristup
+Istražiti pristupe za proveru živosti, na primer:
+gotov anti-spoofing model,
+dostupnu liveness opciju u postojećoj biblioteci,
+aktivnu proveru kao što su treptaj, okretanje glave ili promena položaja.
+Utvrditi:
+na kom principu pristupi rade,
+koje vrste napada pokušava da prepozna,
+koje dodatne modele ili biblioteke zahteva,
+koja su njegova ograničenja.
+Implementirati liveness proveru
+Dodati proveru živosti pre prepoznavanja identiteta.
+Predloženi tok:
+detekcija lica
+    ↓
+provera kvaliteta
+    ↓
+provera živosti
+    ↓
+prepoznavanje identiteta
+    ↓
+konačna odluka
+Ako lice ne prođe proveru živosti, vratiti status spoof ili fake_face i ne prikazivati ga kao uspešno prepoznatu osobu.
+Ponoviti testove
+Ponovo testirati iste scenarije nakon uvođenja liveness provere i uporediti rezultate. Probati razlicite udaljenosti, uglove.
+Dokumentovati zaključke i ograničenja
+ 
+koje spoof pokušaje sistem uspešno odbija,
+koje pokušaje i dalje prihvata,
+da li dolazi do pogrešnog odbijanja pravih osoba,
+kako liveness provera utiče na brzinu sistema,
+da li je jednostavna anti-spoofing provera dovoljna za produkcionu bezbednost?
  
