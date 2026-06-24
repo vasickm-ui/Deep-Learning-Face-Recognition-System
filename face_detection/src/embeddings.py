@@ -4,6 +4,7 @@ from insightface.app import FaceAnalysis
 import os
 import pickle
 
+
 app = FaceAnalysis(name="buffalo_l")  # pretrained InsightFace model
 app.prepare(ctx_id=0)
 

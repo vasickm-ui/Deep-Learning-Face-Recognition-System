@@ -1,10 +1,12 @@
 import onnxruntime as ort
 import cv2
 import numpy as np
+from paths import PROJECT_ROOT
 
+MODEL_PATH = PROJECT_ROOT / "models" / "anti-spoof" / "AntiSpoofing_print-replay_15_128.onnx"
 
 liveness_session = ort.InferenceSession(
-    "models/anti-spoof/AntiSpoofing_print-replay_15_128.onnx"
+    MODEL_PATH
 )
 
 liveness_input = liveness_session.get_inputs()[0].name
