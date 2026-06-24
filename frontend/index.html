@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Camera Test</title>
+</head>
+<body style="margin:0; background:black; display:flex; justify-content:center; align-items:center; height:100vh;">
+
+<video id="video" autoplay playsinline style="width:600px; border:2px solid white;"></video>
+
+<script>
+const video = document.getElementById("video");
+
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then(stream => {
+    video.srcObject = stream;
+  })
+  .catch(err => {
+    alert("Camera error: " + err);
+  });
+</script>
+
+</body>
+</html>

@@ -1,10 +1,11 @@
 import onnxruntime as ort
 import numpy as np
+from paths import PROJECT_ROOT
 
 
-MINIFAS_PATH = "models/anti-spoof/minifasnet_v2.onnx"
-MAX_SPOOF_15_PATH = "models/anti-spoof/AntiSpoofing_bin_15_128.onnx"
-MAX_SPOOF_PRINT_REPLAY_15_128 = "models/anti-spoof/AntiSpoofing_print-replay_15_128.onnx"
+MINIFAS_PATH = PROJECT_ROOT / "models" / "anti-spoof" / "minifasnet_v2.onnx"
+MAX_SPOOF_15_PATH = PROJECT_ROOT / "models" / "anti-spoof" / "AntiSpoofing_bin_15_128.onnx"
+MAX_SPOOF_PRINT_REPLAY_15_128 = PROJECT_ROOT / "models" / "anti-spoof" / "AntiSpoofing_print-replay_15_128.onnx"
 
 session = ort.InferenceSession(MAX_SPOOF_PRINT_REPLAY_15_128)
 
