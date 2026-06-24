@@ -130,4 +130,10 @@ Kreirati face_detection/front-end/kamera.html i kamera.js Implementirati fronten
 Potvrditi CORS origins i uskladiti sa produkcijskim okruzenjem Uneti dozvoljene origins u CORS middleware konfiguraciju u app.py. Za development dozvoliti http://localhost:3000
 
 ovo su dodatni note-ovi na osnovu pregleda koda, i sad sto sam dobio da treba da se ispuni do kraja
- 
+ Napomene za implementaciju:
+- Kamera zauzima ceo ekran (fullscreen video element, object-fit: cover)
+- Kartica je pozicionirana apsolutno, dno levo, sa backdrop-filter: blur
+- Dugme za snimanje je apsolutno, dno desno
+- Endpoint vraca results[] listu - prikazati prvu stavku ili sve redom
+- Automatski okidac svakih 30 sekundi + manuelni klik na dugme
+- Boja kartice po statusu: known=zelena, unknown=crvena, spoof=crvena, bad quality=zuta, processing=siva
