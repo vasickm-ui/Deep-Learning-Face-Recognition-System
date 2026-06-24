@@ -240,4 +240,9 @@ koje pokušaje i dalje prihvata,
 da li dolazi do pogrešnog odbijanja pravih osoba,
 kako liveness provera utiče na brzinu sistema,
 da li je jednostavna anti-spoofing provera dovoljna za produkcionu bezbednost?
+
+
+
+
+D8
  

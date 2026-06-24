@@ -3,33 +3,63 @@ import cv2
 import numpy as np
 
 
-liveness_session = ort.InferenceSession("models/anti-spoof/minifasnet_v2.onnx")
+liveness_session = ort.InferenceSession(
+    "models/anti-spoof/AntiSpoofing_print-replay_15_128.onnx"
+)
+
 liveness_input = liveness_session.get_inputs()[0].name
 
-def check_liveness(face, threshold=0.5):
 
-    face = cv2.resize(face, (80, 80))
+def softmax(x):
+    x = x - np.max(x)
+    e = np.exp(x)
+    return e / e.sum()
+
+
+def check_liveness_binary(face, threshold=0.5):
+    face = cv2.resize(face, (128, 128))   # IMPORTANT: model is 128x128
     face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
-    face = face.astype(np.float32) / 255.0
-    face = np.transpose(face, (2, 0, 1))
+
+    face = face.astype(np.float32) / 255.0  # safer for this model
+
+    face = np.transpose(face, (2, 0, 1))  # CHW
     face = np.expand_dims(face, axis=0)
 
     out = liveness_session.run(None, {liveness_input: face})[0][0]
 
-    # softmax
-    exp = np.exp(out - np.max(out))
-    probs = exp / exp.sum()
 
-    spoof_score = probs[0] + probs[1]
-    live_score = probs[2]
+    probs = softmax(out)
 
+    print(f"SPOOF prob: {probs[0]}")
+    print(f"LIVE  prob: {probs[1]}")
 
-    score = live_score - spoof_score
+    is_live = probs[1] > threshold
 
-    print("LIVE:", live_score)
-    print("SPOOF:", spoof_score)
-    print("SCORE:", score)
+    return is_live
 
-    is_live = score > threshold
+def check_liveness_print_replay(face, threshold):
 
-    return is_live, float(score)
+    # preprocess (same as tested model: 128x128 CHW RGB)
+    face = cv2.resize(face, (128, 128))
+    face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
+
+    face = face.astype(np.float32) / 255.0
+    face = np.transpose(face, (2, 0, 1))
+    face = np.expand_dims(face, axis=0)
+
+    # inference
+    out = liveness_session.run(None, {liveness_input: face})[0][0]
+
+    # probabilities
+    probs = softmax(out)
+
+    real_prob = probs[0]
+    print_prob = probs[1]
+    replay_prob = probs[2]
+
+    print(f"REAL  prob : {real_prob}")
+    print(f"PRINT prob : {print_prob}")
+    print(f"REPLAY prob: {replay_prob}")
+
+    is_spoof = print_prob > threshold or replay_prob > threshold
+    return is_spoof

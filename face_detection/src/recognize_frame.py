@@ -1,6 +1,6 @@
 from embeddings import cosine_similarity, quality_score
 from insightface.app import FaceAnalysis
-from check_liveness import check_liveness
+from check_liveness import check_liveness_binary, check_liveness_print_replay
 
 app = FaceAnalysis(name="buffalo_l")  # pretrained InsightFace model
 app.prepare(ctx_id=0)
@@ -32,16 +32,10 @@ def recognize_frame(frame, db, threshold=0.65):
             continue
         print("Good quality")
 
-
-        # face_crop = frame[y1:y2, x1:x2]
-
-        # if face_crop.size == 0:
-        #     continue
-
     
-        is_live, live_score = check_liveness(face_crop, threshold=0.98)
+        is_spoof = check_liveness_print_replay(face_crop, threshold=0.7)
 
-        if not is_live:
+        if is_spoof:
             results.append({
                 "bounding_box": {"left": x1, "top": y1, "right": x2, "bottom": y2},
                 "status": "spoof",

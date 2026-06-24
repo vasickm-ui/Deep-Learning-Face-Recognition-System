@@ -4,3 +4,4 @@ insightface
 onnxruntime
 pandas
 yt-dlp
+scikit-learn

@@ -1,0 +1,133 @@
+Napraviti web aplikaciju za proveru identiteta osobe koja želi da uđe u firmu.
+
+Sistem raspolaže unapred pripremljenim skupom ovlašćenih osoba. Za svaku osobu dostupna je jedna referentna fotografija na osnovu koje se formira i čuva embedding (videti kako na osnovu jedne fotografije da se omogućiti visoko uspešno prepoznavanje lica uz održavanje bezbednosti, tj. da neko ko nije među zaposlenima ne može da uđe).
+Korisnik otvara aplikaciju u browseru, dozvoljava pristup kameri uređaja i nakon toga vidi prikaz kamere. Sistem obrađuje samo osobu koja se nalazi ispred kamere i donosi odluku da li je osoba ovlašćena za ulazak.
+Povezati postojeći sistem za prepoznavanje lica sa web aplikacijom koja se otvara u browseru i koristi kameru uređaja na kojem je aplikacija pokrenuta.
+Aplikacija je namenjena proveri zaposlenih prilikom ulaska u firmu. Sistem raspolaže skupom ovlašćenih osoba, pri čemu za svaku osobu postoji jedna referentna fotografija.
+Cilj
+Napraviti browser aplikaciju koja automatski detektuje i proverava osobu koja je prikazana na kameri.
+Proces treba da bude brz i nenametljiv: korisnik prilazi kameri, sistem prepoznaje lice u kadru i prikazuje odluku o ulasku.
+Osnovni tok rada
+Otvoriti aplikaciju u browseru
+    ↓
+Zatražiti dozvolu za pristup kameri
+    ↓
+Prikazati sliku sa kamere
+    ↓
+Proveriti broj i kvalitet vidljivih lica, razmotriti kako handlovati kada je prisutno više lica
+    ↓
+Obraditi jedno lice
+    ↓
+Proveriti živost lica (na početku preskočiti, videti uticaj na brzinu, ukoliko usporava sistem izbaciti)
+    ↓
+Uporediti embedding sa ovlašćenim osobama
+    ↓
+Prikazati odluku: dozvoljen ili odbijen ulazak
+Zadaci
+Napraviti osnovni browser interfejs
+Interfejs treba da sadrži:
+prikaz slike sa kamere,
+trenutni status sistema,
+rezultat prepoznavanja,
+jasnu poruku o dozvoljenom ili odbijenom ulasku,
+poruku o grešci kada kamera ili backend nisu dostupni.
+Interfejs ne treba da zahteva dodatnu interakciju korisnika nakon što je kamera pokrenuta.
+Omogućiti pristup kameri uređaja
+Pri otvaranju aplikacije zatražiti dozvolu za pristup kameri.
+Nakon odobrenja:
+automatski prikazati video,
+automatski pokrenuti obradu,
+ne zahtevati da korisnik ručno snima fotografiju,
+omogućiti pravilno zaustavljanje kamere.
+Prilagoditi detekciju tako da ubrza ulazak u firmu, a ne uspori
+Ne zahtevati da lice bude postavljeno u tačno definisanu malu zonu niti da korisnik dugo miruje.
+Obradu pokrenuti kada:
+postoji lice dovoljne veličine za pouzdano prepoznavanje,
+lice nije značajno zaklonjeno,
+kvalitet slike je dovoljan,
+lice je dovoljno vidljivo za izračunavanje embedding-a.
+Dozvoliti umereno pomeranje glave, promenu položaja i manji ugao lica.
+Ispitati pouzdanost, eksperimentisati sa potvrdom kroz više frejmova
+Ne donositi konačnu odluku na osnovu samo jednog frejma.
+Ovlašćenu osobu potvrditi kada se isti rezultat ponovi kroz nekoliko uzastopnih obrada, na primer:
+isti identitet u 2 od 3 poslednja rezultata,
+dovoljan score sličnosti,
+uspešna provera kvaliteta,
+uspešna anti-spoofing provera, ako je uključena.
+Potvrda treba da bude dovoljno kratka da ne usporava prolazak.
+Povezati frontend sa recognition backendom
+Iz browsera periodično izdvajati frejm sa kamere i slati ga backend endpointu.
+Endpoint treba da vrati:
+status sistema,
+ime osobe ako je ovlašćena,
+score sličnosti,
+bounding box primarnog lica,
+razlog odbijanja kada prepoznavanje nije izvršeno.
+Mogući statusi, npr:
+waiting,
+checking,
+authorized,
+unauthorized,
+low_quality,
+spoof,
+multiple_primary_faces,
+error.
+Prikazati jasnu odluku korisniku
+Za ovlašćenu osobu prikazati:
+ime osobe,
+poruku „Ulazak dozvoljen“.
+Za osobu koja nije pronađena među ovlašćenim osobama prikazati:
+poruku „Ulazak nije dozvoljen“,
+bez prikazivanja ikakvogimena.
+Ako kvalitet trenutno nije dovoljan, prikazati kratku pomoćnu poruku, na primer:
+„Priđite malo bliže“,
+„Pogledajte ka kameri“,
+„Sačekajte trenutak“.
+Poruke ne treba prikazivati ako sistem može uspešno da donese odluku bez dodatnog pozicioniranja.
+Automatski resetovati sistem nakon provere
+Nakon prikazane odluke:
+zadržati rezultat kratko vreme,
+sačekati da osoba napusti kadar,
+ukloniti prethodni identitet i rezultat,
+vratiti sistem u stanje čekanja za sledeću osobu.
+Sprečiti da rezultat prethodne osobe bude prikazan ili ponovo korišćen za sledećeg korisnika.
+Testirati realne scenarije prolaska
+Testirati najmanje:
+Scenario	Očekivani rezultat
+Ovlašćena osoba prilazi normalnim tempom	Brzo prepoznavanje i dozvoljen ulazak
+Ovlašćena osoba nije tačno u centru	Prepoznavanje ako je lice dovoljno vidljivo
+Blago okretanje glave	Prepoznavanje bez dodatnog pozicioniranja
+Nepoznata osoba	Odbijen ulazak
+Mala lica u pozadini	Obraditi dominantnu osobu ispred kamere
+Dve osobe neposredno ispred kamere	Zatražiti pojedinačan prolazak
+Osoba je predaleko	Sačekati ili tražiti da priđe bliže
+Osoba prolazi prebrzo	Ne doneti nepouzdanu odluku
+Fotografija ili ekran	Odbiti kao spoof, ako je provera uključena
+Osoba izlazi iz kadra	Resetovati sistem
+ 	 
+Očekivani rezultat
+Na kraju Dana 8 treba da postoji povezana browser aplikacija koja:
+traži dozvolu za kameru,
+prikazuje video sa kamere,
+automatski obrađuje frejmove,
+prepoznaje dominantnu osobu koja prilazi kameri,
+ne zahteva precizno pozicioniranje glave,
+ignoriše mala pozadinska lica,
+sprečava odluku kada su dve osobe podjednako blizu,
+prikazuje jasnu odluku o ulasku,
+automatski se priprema za sledeću osobu.
+ 
+ 
+gledaj kao usmerenje, ako vidis da nesto ima vise smisla, neki bolji pristup, predlog javi
+cilj da imamo fukncionalnu aplikaciju na kraju koju mozemo da testiramo
+Ovde izazovno je to sto imamo po 1 sliku za svakog zaposlenog
+ 
+Ispraviti hardkodovanu putanju modela u check_liveness.py Linija 6 koristi relativnu putanju "models/anti-spoof/minifasnet_v2.onnx" koja puca kad se server pokrene iz drugog radnog direktorijuma. Zameniti sa apsolutnom putanjom baziranom na __file__ lokaciji.
+Kreirati face_detection/app.py FastAPI server sa POST /upload endpointom. Prima base64 sliku, konvertuje je u numpy array bez pisanja na disk, prosledjuje recognize_frame() funkciji u thread pool executoru (jer je funkcija sinhrona i CPU-intenzivna) i vraca JSON rezultat. Dodati CORS middleware, ucitavanje embedding DB na lifespan startupu servera.
+Kreirati .env.development i .env.production fajlove u face_detection/ Development: Uvicorn sa --reload, port 5000. Production: Uvicorn bez reload, host 0.0.0.0, port 5500. Dodati APP_ENV promenljivu za razlikovanje rezima.
+Azurirati face_detection/requirements.txt Dodati: fastapi, uvicorn[standard], python-dotenv, pillow.
+Kreirati face_detection/front-end/kamera.html i kamera.js Implementirati frontend prema mockupu u mockup.html Kamera zauzima ceo ekran, kartica sa rezultatom je overlay dno levo, dugme za snimanje je dno desno. Endpoint vraca results[] listu pa treba prikazati prvu stavku ili sve redom. Boja kartice po statusu: known zelena, unknown i spoof crvena, bad quality zuta, obrada siva. Automatski okidac svakih 30 sekundi plus manualni klik.
+Potvrditi CORS origins i uskladiti sa produkcijskim okruzenjem Uneti dozvoljene origins u CORS middleware konfiguraciju u app.py. Za development dozvoliti http://localhost:3000
+
+ovo su dodatni note-ovi na osnovu pregleda koda, i sad sto sam dobio da treba da se ispuni do kraja
+ 
