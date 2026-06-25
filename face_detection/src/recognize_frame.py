@@ -1,9 +1,22 @@
-from embeddings import cosine_similarity, quality_score
+from .embeddings import cosine_similarity, quality_score
 from insightface.app import FaceAnalysis
-from check_liveness import check_liveness_binary, check_liveness_print_replay
+from .check_liveness import check_liveness_binary, check_liveness_print_replay
+import numpy as np
+import cv2
+import base64
 
 app = FaceAnalysis(name="buffalo_l")  # pretrained InsightFace model
 app.prepare(ctx_id=0)
+
+def decode_image(image_base64: str):
+    if "," in image_base64:
+        image_base64 = image_base64.split(",")[1]
+
+    image_bytes = base64.b64decode(image_base64)
+
+    image_np = np.frombuffer(image_bytes, dtype=np.uint8)
+
+    return cv2.imdecode(image_np, cv2.IMREAD_COLOR)
 
 def recognize_frame(frame, db, threshold=0.65):
     results = []
