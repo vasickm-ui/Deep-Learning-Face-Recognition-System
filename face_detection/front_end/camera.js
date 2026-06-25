@@ -32,31 +32,49 @@ function getFrame() {
 
 /* REAL FACE API CALL */
 async function recognizeFrame(frame) {
-  console.log("SENDING FRAME SIZE:", frame.length);
-  const res = await fetch("http://127.0.0.1:8000/upload", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ image: frame })
-  });
+  try {
+    const res = await fetch("http://127.0.0.1:8000/upload", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ image: frame })
+    });
 
-  return await res.json();
+    const data = await res.json();
+
+    console.log("BACKEND RAW RESPONSE:", data);
+
+    return data;
+  } catch (err) {
+    console.error("FETCH FAILED:", err);
+  }
 }
-
 /* UI UPDATE */
 function updateUI(result) {
-  card.className = "card " + result.status;
+  if (!result || result.length === 0) {
+    card.className = "card unknown";
+    title.innerText = "Nema lica";
+    subtitle.innerText = "Obrada...";
+    return;
+  }
 
-  title.innerText = result.name;
+  const face = result[0];
 
-  if (result.status === "known") {
-    subtitle.innerText = `Pouzdanost: ${result.confidence}%`;
-  } else if (result.status === "unknown") {
-    subtitle.innerText = "Osoba nije u bazi";
-  } else if (result.status === "spoof") {
-    subtitle.innerText = "Nije pravo lice";
-  } else if (result.status === "quality") {
+  card.className = "card " + face.status;
+
+  title.innerText = face.name ?? "unknown";
+
+  if (face.status === "known") {
+    subtitle.innerText = `Sigurnost: ${(face.similarity_score * 100).toFixed(1)}%`;
+  } 
+  else if (face.status === "unknown") {
+    subtitle.innerText = "Nepoznata osoba";
+  } 
+  else if (face.status === "spoof") {
+    subtitle.innerText = "Fake / replay detektovan";
+  } 
+  else {
     subtitle.innerText = "Loš kvalitet slike";
   }
 }
@@ -92,5 +110,5 @@ console.log("This works!")
 startCamera();
 
 /* RUN EVERY 500ms (real-time feel) */
-setInterval(processLoop, 500);
+setInterval(processLoop, 2000);
 

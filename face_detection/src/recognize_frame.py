@@ -9,14 +9,28 @@ app = FaceAnalysis(name="buffalo_l")  # pretrained InsightFace model
 app.prepare(ctx_id=0)
 
 def decode_image(image_base64: str):
+    if not image_base64:
+        raise ValueError("Empty image received")
+
     if "," in image_base64:
         image_base64 = image_base64.split(",")[1]
 
     image_bytes = base64.b64decode(image_base64)
 
+    if len(image_bytes) == 0:
+        raise ValueError("Decoded bytes are empty")
+
     image_np = np.frombuffer(image_bytes, dtype=np.uint8)
 
-    return cv2.imdecode(image_np, cv2.IMREAD_COLOR)
+    if image_np.size == 0:
+        raise ValueError("Image buffer empty")
+
+    img = cv2.imdecode(image_np, cv2.IMREAD_COLOR)
+
+    if img is None:
+        raise ValueError("cv2 failed to decode image")
+
+    return img
 
 def recognize_frame(frame, db, threshold=0.65):
     results = []
@@ -31,8 +45,10 @@ def recognize_frame(frame, db, threshold=0.65):
         best_score = -1
 
         emb = face.embedding
-        x1, y1, x2, y2 = face.bbox.astype(int)
+        x1, y1, x2, y2 = map(int, face.bbox)
         face_crop = frame[y1:y2, x1:x2]
+
+
 
         if quality_score(face_crop) < 0.1:
             print("Bad quality!")
@@ -64,6 +80,10 @@ def recognize_frame(frame, db, threshold=0.65):
             if score > best_score:
                 best_score = score
                 name = person
+
+            print(type(best_score))
+            print(type(emb))
+            print(type(db_emb))
 
         if best_score >= threshold:
             status = "known"
