@@ -137,3 +137,7 @@ ovo su dodatni note-ovi na osnovu pregleda koda, i sad sto sam dobio da treba da
 - Endpoint vraca results[] listu - prikazati prvu stavku ili sve redom
 - Automatski okidac svakih 30 sekundi + manuelni klik na dugme
 - Boja kartice po statusu: known=zelena, unknown=crvena, spoof=crvena, bad quality=zuta, processing=siva
+
+
+
+chrome://flags/#unsafely-treat-insecure-origin-as-secure
