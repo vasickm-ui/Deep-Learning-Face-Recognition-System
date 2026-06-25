@@ -9,13 +9,22 @@ let processing = false;
 
 /* CAMERA */
 async function startCamera() {
-  const stream = await navigator.mediaDevices.getUserMedia({
-    video: { facingMode: "user" },
-    audio: false
-  });
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user" },
+      audio: false
+    });
 
-  video.srcObject = stream;
-  bg.srcObject = stream;
+
+    video.srcObject = stream;
+    bg.srcObject = stream;
+
+    await video.play();
+    await bg.play();
+
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 /* FRAME CAPTURE */
@@ -33,7 +42,7 @@ function getFrame() {
 /* REAL FACE API CALL */
 async function recognizeFrame(frame) {
   try {
-    const res = await fetch("http://127.0.0.1:8000/upload", {
+    const res = await fetch("http://192.168.110.166:8000/upload", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -97,17 +106,17 @@ async function processLoop() {
     console.log("FRAME RESULT:", result);
 
     updateUI(result);
-  } catch (err) {
+    } catch (err) {
     console.error(err);
-  }
+    }
 
-  processing = false;
+    processing = false;
 }
 
 /* START STREAM */
 
-console.log("This works!")
-startCamera();
+console.error("Error:")
+document.getElementById("startBtn").addEventListener("click", startCamera);
 
 /* RUN EVERY 500ms (real-time feel) */
 setInterval(processLoop, 2000);

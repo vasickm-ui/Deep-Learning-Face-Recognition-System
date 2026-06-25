@@ -2,18 +2,15 @@ import asyncio
 import base64
 import os
 from contextlib import asynccontextmanager
-
 from fastapi.encoders import jsonable_encoder
-
-
 from dotenv import load_dotenv
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from src.embeddings import load_db, calculate_avg_embeddings
 from src.recognize_frame import recognize_frame, decode_image
+from src.paths import PROJECT_ROOT
 
 
 APP_ENV = "development"
@@ -24,7 +21,8 @@ else:
     load_dotenv(".env.development")
 
 db = None
-
+DB_PATH = PROJECT_ROOT / "data" / "vectors" / "vasic_embeddings.pkl"
+print(DB_PATH)
 
 class UploadRequest(BaseModel):
     image: str
@@ -49,9 +47,9 @@ else:
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = ["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["*", "OPTIONS"],
     allow_headers=["*"],
 )
 
