@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kamera</title>
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+      font-family: Arial;
+    }
+
+    video {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+    }
+
+    .card {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      padding: 14px;
+      border-radius: 10px;
+      min-width: 220px;
+      color: white;
+      backdrop-filter: blur(8px);
+    }
+
+    .known { background: rgba(34,197,94,0.25); }
+    .unknown { background: rgba(239,68,68,0.25); }
+    .spoof { background: rgba(239,68,68,0.25); }
+    .bad_quality { background: rgba(234,179,8,0.25); color:black; }
+    .processing { background: rgba(148,163,184,0.25); }
+
+    #btn {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<video id="video" autoplay playsinline></video>
+
+<div id="card" class="card processing">
+  Obrada...
+</div>
+
+<button id="btn">●</button>
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+<script src="camera.js"></script>
+</body>
+</html>

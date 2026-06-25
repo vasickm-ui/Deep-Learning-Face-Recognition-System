@@ -1,11 +1,9 @@
-# face_detection/app.py
-
 import asyncio
 import base64
+import os
 from contextlib import asynccontextmanager
 
-import cv2
-import numpy as np
+from dotenv import load_dotenv
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,14 +13,19 @@ from src.embeddings import load_db, calculate_avg_embeddings
 from src.recognize_frame import recognize_frame, decode_image
 
 
+APP_ENV = "development"
+
+if APP_ENV == "production":
+    load_dotenv(".env.production")
+else:
+    load_dotenv(".env.development")
+
 db = None
 
 
 class UploadRequest(BaseModel):
     image: str
 
-
-# load embeddings on startup
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -36,27 +39,28 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-
-# enable cors
+if APP_ENV == "development":
+    allow_origins = ["http://localhost:3000"]
+else:
+    allow_origins = os.getenv("CORS_ORIGINS", "").split(",")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allow_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-@app.get("/test")
-def home():
-    return "Hello World"
 
-# upload endpoint
+@app.get("/test")
+def test():
+    return {"msg": "radi", "env": APP_ENV}
+
 
 @app.post("/upload")
 async def upload(request: UploadRequest):
-
     frame = decode_image(request.image)
 
     loop = asyncio.get_running_loop()
@@ -68,6 +72,4 @@ async def upload(request: UploadRequest):
         db
     )
 
-    return {
-        "faces": results
-    }
+    return {"faces": results}
